@@ -1,0 +1,94 @@
+#include "gl/glut.h"
+
+void Setup(void)
+{
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+}
+void DrawEchelon(void)
+{
+	glBegin(GL_POLYGON);
+	glVertex2f(0.0f, 0.0f);
+	glVertex2f(80.0f, 0.0f);
+	glVertex2f(60.0f, 80.0f);
+	glVertex2f(20.0f, 80.0f);
+	glEnd();
+}
+void ChangeSize(int w, int h)
+{
+	if (h == 0) h = 1;
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (w <= h)
+		glOrtho(-100.0f, 100.0f, -100.0f*h / w, 100.0f*h / w, -100.0f, 100.0f);
+	else
+		glOrtho(-100.0f*h / w, 100.0f*h / w, -100.0f, 100.0f, -100.0f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	/*
+	定义可视化区域，void glOrtho(Gldouble left,)
+	*/
+}
+void myDisplay(void)
+{
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//指定混合函数
+	glEnable(GL_BLEND);     //启用混合状态  
+	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex2f(-100.0f, 0.0f);
+	glVertex2f(100.0f, 0.0f);
+	glVertex2f(0.0f, -100.0f);
+	glVertex2f(0.0f, 100.0f);
+	glEnd();
+	glColor3f(0.0f, 0.0f, 0.0f);
+	DrawEchelon();
+
+	glRotatef(120.0f, 0.0f, 0.0f, 1.0f);//绘制一个绕坐标原点逆时针旋转120度的红色等腰梯形
+	glColor4f(1.0f, 0.0f, 0.0f, 0.7f);
+	DrawEchelon();
+
+	glLoadIdentity();//绘制一个沿y坐标负方向平移30个像素单位的绿色等腰梯形
+	glTranslatef(-30.0f, 0.0f, 0.0f);
+	glColor4f(0.0f, 1.0f, 0.0f,0.8f);
+	DrawEchelon();
+
+	glLoadIdentity();//绘制一个缩放因子沿x轴放大2倍，沿y轴放大1.2倍的蓝色等腰梯形
+	glScalef(2.0f, 1.2f, 1.0f);
+	glColor4f(0.0f, 0.0f, 1.0f,0.7f);
+	DrawEchelon();
+
+	glLoadIdentity();//绘制一个沿x轴对称并且沿x轴放大2倍的黄色等腰梯形
+	glScalef(2.0f, -1.0f, 1.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	DrawEchelon();
+
+
+	glutSwapBuffers();//双缓存：实现从非显示缓冲区到显示缓冲区的复制
+}
+
+int main(int argc, char *argv[])
+
+{
+
+	glutInit(&argc, argv);
+
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);//双缓冲运用于复杂图形
+
+	glutCreateWindow("第一个OpenGL程序");
+
+	glutReshapeFunc(ChangeSize);
+
+	glutDisplayFunc(&myDisplay);
+
+	Setup();//设置窗口背景色为白色
+
+	glutMainLoop();
+
+	return 0;
+
+}
+
+

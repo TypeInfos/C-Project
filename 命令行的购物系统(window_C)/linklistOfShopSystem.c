@@ -108,9 +108,7 @@ main()
             printf("本店的商品:\n");
             showgoods(L);
             printf("输入你想买商品的编号:\n");
-            
             sell_shop(L,H);
-            
             printf("购买成功!");
         }
         else

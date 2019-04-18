@@ -1,0 +1,153 @@
+#include <Windows.h>
+#include <gl/gl.h>
+#include <gl/glu.h>
+#include <gl/glut.h>
+
+void SetupRC()
+{
+	glEnable(GL_DEPTH_TEST); //启用深度测试
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//指定混合函数
+	glEnable(GL_BLEND);     //启用混合状态  
+	glFrontFace(GL_CCW);    //指定逆时针为正面
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+}
+void DrawTriangle(void)
+{
+	glBegin(GL_TRIANGLES);
+	glVertex3f(20.0f, 20.0f, 0.0f);
+	glVertex3f(-20.0f, 20.0f, 0.0f);
+	glVertex3f(-20.0f, -20.0f, 0.0f);
+	glEnd();
+}
+void ChangeSize(int w, int h)
+{
+	GLfloat fAspect;
+	fAspect = (float)w / (float)h;
+	if (h == 0) h == 1;
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	//设置修剪区
+	gluPerspective(45.0, fAspect, 1.0, 500.0); //对称透视投影
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void RenderScene(void)
+{
+
+	//绕原子核旋转角度
+	static float fElect1 = 0.0f;
+	static float fElect2 = 360.0f;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//重置模型视图矩阵
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	//将图形绕Z轴负方向移动
+	glTranslatef(0.0f, 0.0f, -250.0f);
+	//绘制红色原子核
+	glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+	glutSolidSphere(10.0f, 15, 15);
+	
+	
+	//保存当前模型视图矩阵
+	glPushMatrix();
+	glRotatef(fElect1, 0.0f, 0.0f, 1.0f);//绕Z轴旋转
+	glTranslatef(70.0f, 0.0f, 0.0f); // 平移
+	glColor3f(0.0f, 0.0f, 0.0f);    //绘制黑色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	//相反方向
+	glPushMatrix();
+	glRotatef(fElect2, 0.0f, 0.0f, 1.0f);//绕Z轴旋转
+	glTranslatef(70.0f, 0.0f, 0.0f); // 平移
+	glColor3f(0.0f, 0.0f, 0.0f);    //绘制黑色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	glPushMatrix();
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(70.0f, 0.0f, 0.0f); // 平移
+	glColor4f(0.0f, 0.0f, 1.0f,0.8f);     // 蓝色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	//相反方向
+	glPushMatrix();
+	glRotatef(fElect2, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(70.0f, 0.0f, 0.0f); // 平移
+	glColor4f(0.0f, 0.0f, 1.0f, 0.8f);     // 蓝色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	glPushMatrix();
+	glRotatef(45.0f, 0.0f, 0.0f, 1.0f);//绕Z轴变换
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(0.0f, 0.0f, 70.0f); // 平移
+	glColor4f(0.0f, 1.0f, 0.0f,0.8f);  //绿色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	glPushMatrix();
+	glRotatef(-45.0f, 0.0f, 0.0f, 1.0f);//绕Z轴变换
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(0.0f, 0.0f, 70.0f); // 平移
+	glColor4f(0.6f, 1.0f, 0.0f, 0.8f); //浅绿色电子
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	glPushMatrix();
+	glRotatef(135.0f, 0.0f, 0.0f, 1.0f);//绕Z轴变换
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(0.0f, 0.0f, 70.0f); // 平移
+	glColor4f(1.0f, 1.0f, 0.0f, 0.8f); //
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	glPushMatrix();
+	glRotatef(-135.0f, 0.0f, 0.0f, 1.0f);//绕Z轴变换
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕Y轴旋转
+	glTranslatef(0.0f, 0.0f, 70.0f); // 平移
+	glColor4f(1.0f, 1.0f, 0.0f, 0.8f); //
+	glutSolidSphere(6.0f, 15, 15);   //创建实心体，画出电子
+	glPopMatrix(); //恢复矩阵
+
+	fElect2 -= 10.0f;
+	if (fElect2 < 0.0f) fElect2 = 360.0f;
+
+	fElect1 += 10.0f;
+	if (fElect1 > 360.0f) fElect1 = 10.0f;
+	glutSwapBuffers();
+
+}
+void TimerFunc(int value)
+{
+	glutPostRedisplay();
+	glutTimerFunc(100, TimerFunc, 1);
+}
+int main(int argc, char *argv[])
+
+{
+
+	glutInit(&argc, argv);
+
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+
+
+	glutCreateWindow("第一个OpenGL程序");
+
+	glutReshapeFunc(ChangeSize);
+
+	glutDisplayFunc(RenderScene);
+	glutTimerFunc(500, TimerFunc, 1);
+
+	SetupRC();
+
+	glutMainLoop();
+
+	return 0;
+
+}

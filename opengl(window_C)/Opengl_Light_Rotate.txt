@@ -1,0 +1,153 @@
+#include<windows.h>
+#include<gl/GL.h>
+#include<gl/glut.h>
+
+float fEarth = 2.0f;
+float fMoon = 24.0f;
+
+void Init()
+{
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.8f);
+}
+
+void Reshape(int w, int h)
+{
+	GLfloat fAspect;
+	fAspect = (float)w / (float)h;
+	if (h == 0) h = 1;
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0, fAspect, 1.0, 1000.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void Display()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glTranslatef(0.0f, 0.0f, -500.0f);
+
+	//定义一个红色光源
+	{
+		GLfloat sun_light_position[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		GLfloat sun_light_ambient[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+		GLfloat sun_light_diffuse[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+		GLfloat sun_light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glLightfv(GL_LIGHT0, GL_POSITION, sun_light_position);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, sun_light_ambient);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_light_diffuse);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, sun_light_specular);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+	}
+	//定义太阳
+	{
+		GLfloat sun_mat_ambient[] = { 0.2f, 0.2f, 0.02, .0f };
+		GLfloat sun_mat_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+		GLfloat sun_mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat sun_mat_emission[] = { 0.8f, 0.1f, 0.0f, 1.0f };
+		GLfloat sun_mat_shininess = 100.0f;
+		glMaterialfv(GL_FRONT, GL_AMBIENT, sun_mat_ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, sun_mat_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, sun_mat_specular);
+		glMaterialfv(GL_FRONT, GL_EMISSION, sun_mat_emission);
+		glMaterialf(GL_FRONT, GL_SHININESS, sun_mat_shininess);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glutSolidSphere(50.0f, 20, 20);
+	}
+	//让light0变成白色光源
+	{
+		GLfloat sun_light_position[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		GLfloat sun_light_ambient[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		GLfloat sun_light_diffuse[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		GLfloat sun_light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glLightfv(GL_LIGHT0, GL_POSITION, sun_light_position);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, sun_light_ambient);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_light_diffuse);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, sun_light_specular);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+	}
+	//再定义一个蓝色光源
+	{
+		GLfloat sun_light_position[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		GLfloat sun_light_ambient[] = { .0f, 0.0f, 1.0f, 1.0f };
+		GLfloat sun_light_diffuse[] = { .0f, 0.0f, 1.0f, 1.0f };
+		GLfloat sun_light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glLightfv(GL_LIGHT2, GL_POSITION, sun_light_position);
+		glLightfv(GL_LIGHT2, GL_AMBIENT, sun_light_ambient);
+		glLightfv(GL_LIGHT2, GL_DIFFUSE, sun_light_diffuse);
+		glLightfv(GL_LIGHT2, GL_SPECULAR, sun_light_specular);
+		glEnable(GL_LIGHT2);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+	}
+	//定义地球的材质并绘制地球
+	{
+		GLfloat earth_mat_ambient[] = { 0.0f, 0.0f, 0.5f, 1.0f };
+		GLfloat earth_mat_diffuse[] = { 0.3f, 0.3f, 0.8f, 1.0f };
+		GLfloat earth_mat_specular[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		GLfloat earth_mat_emission[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		GLfloat earth_mat_shininess = 100.0f;
+		glMaterialfv(GL_FRONT, GL_AMBIENT, earth_mat_ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, earth_mat_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, earth_mat_specular);
+		glMaterialfv(GL_FRONT, GL_EMISSION, earth_mat_emission);
+		glMaterialf(GL_FRONT, GL_SHININESS, earth_mat_shininess);
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glRotatef(30.0f, 0.0f, 0.0f, 1.0f);
+		glRotatef(fEarth, 0.0f, 1.0f, 0.0f);
+		glTranslatef(200.0f, 0.0f, 0.0f);
+		glutSolidSphere(20.0f, 20, 20);
+	}
+	glPushMatrix();
+	//定义月球的材质并绘制
+	{
+		GLfloat earth_moon_ambient[] = { 0.0f, 0.0f, 0.5f, 1.0f };
+		GLfloat earth_moon_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat earth_moon_specular[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		GLfloat earth_moon_emission[] = { 0.99f, 0.99f, 0.7f, 0.0f };
+		GLfloat earth_moon_shininess = 1.0f;
+		glMaterialfv(GL_FRONT, GL_AMBIENT, earth_moon_ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, earth_moon_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, earth_moon_specular);
+		glMaterialfv(GL_FRONT, GL_EMISSION, earth_moon_emission);
+		glMaterialf(GL_FRONT, GL_SHININESS, earth_moon_shininess);
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glRotatef(6.0f, 1.0f, 1.0f, 1.0f);
+		glRotatef(fMoon, 0.0f, 1.0f, 0.0f);
+		glTranslatef(30.0f, 0.0f, 0.0f);
+		glutSolidSphere(5.0f, 20, 20);
+		glPopMatrix();
+	}
+	glutSwapBuffers();
+}
+void myIdle()
+{
+	fEarth += 0.01f;
+	if (fEarth >= 360.0)fEarth = 2.0;
+	fMoon += 0.01f;
+	if (fMoon >= 360.0) fMoon = 24.0;
+	Display();
+}
+int main(int argc, char* argv[])
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(600, 400);
+	glutCreateWindow("Moon Sun Earth");
+	glutReshapeFunc(Reshape);
+	glutDisplayFunc(Display);
+	glutIdleFunc(&myIdle);
+	Init();
+	glutMainLoop();
+	return 0;
+}

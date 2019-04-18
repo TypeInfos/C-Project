@@ -1,0 +1,74 @@
+#include <windows.h>
+#include <gl/gl.h>
+#include <gl/glut.h>
+#include <gl/glut.h>
+
+void SetupRC()
+{
+	glEnable(GL_DEPTH_TEST); //启用深度测试
+	glFrontFace(GL_CCW);	//指定逆时针为正面,默认为GL_CCW
+	glClearColor(.0f, .0f, .0f, 1.0f);	//背景颜色
+}
+void ChangeSize(int w, int h)
+{
+	GLfloat fAspect;
+	fAspect = (float)w / (float)h;
+	if (h == 0) h = 1;	//设置视见区大小
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	//设置修剪区
+	gluPerspective(45.0, fAspect, 1.0, 1000.0);	//对称透视投影
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+void RenderScene(void)
+{
+	//绕地球旋转角度
+	static float fElect1 = 0.0f;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//重置模型视图矩阵
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	//将图形绕z轴负方向移动
+	glTranslatef(0.0f, 0.0f, -250.0f);
+	//绘制绿色地球
+	glColor3f(0.0f, 0.8f, 0.0f);
+	glutSolidSphere(26.0f, 150, 150);
+	//绘制红色月亮
+	glColor3f(1.0f, 0.0f, 0.0f);
+	//glPushMatrix();
+	glRotatef(23.27f, 0.0f, 0.0f, 1.0f);
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);//绕y轴旋转一定角度
+	glTranslatef(90.0f, 0.0f, 0.0f);	//平移
+	glutSolidSphere(6.0f,15,15);	//创建实心体，画出电子
+	//glPushMatrix();	//保存当前矩阵，当前可有可无，因为当前画的图形比较简单
+	glRotatef(fElect1, 0.0f, 1.0f, 0.0f);	//绕y轴旋转一定角度
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glTranslatef(30.0f, 0.0f, 0.0f);
+	glutSolidSphere(5.0f, 20, 20);
+	//glPopMatrix();	//取出上次保存的矩阵glPushMatrix()
+	//增加旋转的步长
+	fElect1 += 5.0f;
+	if (fElect1 > 360.0f) fElect1 = 5.0f;
+	/* 前台缓冲和后台缓冲,交换两个缓冲区指针,在开启GLUT_DOUBLE时*/
+	glutSwapBuffers();
+}
+void TimerFunc(int value)
+{
+	glutPostRedisplay();	//刷新函数
+	glutTimerFunc(100, TimerFunc, 1);	//定时器函数
+}
+int main(int argc, char* argv[])
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutCreateWindow("月亮绕地球旋转");
+	glutReshapeFunc(ChangeSize);	//窗口大小改变时调用
+	glutDisplayFunc(RenderScene);
+	glutTimerFunc(500, TimerFunc, 1);
+	SetupRC();
+	glutMainLoop();
+	return 0;
+}
